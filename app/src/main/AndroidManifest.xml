@@ -18,6 +18,8 @@
 
         <service android:name=".services.SimpleService" />
 
+        <service  android:name=".services.LiveService"/>
+
         <activity android:name=".SecondActivity" />
 
     </application>

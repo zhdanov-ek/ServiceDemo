@@ -15,15 +15,15 @@ public class SimpleService extends Service {
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate: ");
-        makeJob();
-        makeJobAsync();
         super.onCreate();
     }
 
     // Срабатывает когда сервис запущен методом startService
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
-        return super.onStartCommand(intent, flags, startId);
+     //   makeJob();
+     //   makeJobAsync();
+        return START_NOT_STICKY;
     }
 
     public void onDestroy() {

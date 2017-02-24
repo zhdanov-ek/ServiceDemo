@@ -74,8 +74,15 @@
 
 
     <Button
-        android:id="@+id/btnSenderService"
+        android:id="@+id/btnStartLiveService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start SenderService for send data to activity" />
+        android:text="Start LiveService" />
+
+    <Button
+        android:id="@+id/btnStopLiveService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop LiveService" />
+
 </LinearLayout>

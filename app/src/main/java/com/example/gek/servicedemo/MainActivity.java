@@ -13,16 +13,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.gek.servicedemo.services.LiveService;
 import com.example.gek.servicedemo.services.SimpleService;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     public static final int CODE_SUM_OPERATION = 55;
-    public static final String EXTRA_A = "a";
-    public static final String EXTRA_B = "b";
     public static final String EXTRA_RESULT = "result";
-    public static final String EXTRA_PENDING_INTENT = "pending_intent";
-    public static final String TAG = "1111 ";
+    public static final String TAG = "SERVICE DEMO (MA)";
     private Context ctx;
 
     public static final int NOTIFY_ID = 1;
@@ -45,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnStartSimple).setOnClickListener(this);
         findViewById(R.id.btnStopSimple).setOnClickListener(this);
         findViewById(R.id.btnPendingIntent).setOnClickListener(this);
-        findViewById(R.id.btnSenderService).setOnClickListener(this);
-
+        findViewById(R.id.btnStartLiveService).setOnClickListener(this);
+        findViewById(R.id.btnStopLiveService).setOnClickListener(this);
     }
 
     @Override
@@ -62,37 +60,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btnPendingIntent:
                 Log.d(TAG, "onClick: startPendingIntent ");
-                EditText etNumA = (EditText)findViewById(R.id.etNumA);
-                EditText etNumB = (EditText)findViewById(R.id.etNumB);
+                demoPendingIntent();
+                break;
 
-                // Намерение, которое будет выполнено по клику на уведомлении
-                Intent notificationIntent = new Intent(ctx, SecondActivity.class);
+            case R.id.btnStartLiveService:
+                Log.d(TAG, "onClick: startLiveService ");
+                startService(new Intent(this, LiveService.class));
+                break;
 
-                // Ожидающее намерение, которое будет помещено в уведомление и будет ожидать клика
-                PendingIntent pendingIntent = PendingIntent.getActivity(
-                        ctx,
-                        0,
-                        notificationIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT);
-
-                // Создаем с помощью билдера свое уведомление
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-                builder.setContentIntent(pendingIntent)
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setAutoCancel(true)
-                        .setContentTitle("my tytle")
-                        .setContentText("My text : " + etNumA.getText())
-                        .setContentInfo("my info" + etNumB.getText());
-
-                // Получаем непосрдественно класс Notification на основе нашего билдера
-                Notification notification = builder.build();
-
-                // Показываем наше уведомление через системный менеджер уведомлений
-                NotificationManager nm =
-                        (NotificationManager)getSystemService(ctx.NOTIFICATION_SERVICE);
-                nm.notify(NOTIFY_ID, notification);
+            case R.id.btnStopLiveService:
+                Log.d(TAG, "onClick: stopLiveService ");
+                stopService(new Intent(this, LiveService.class));
                 break;
 
         }
+    }
+
+
+    // Демонстрация ожидающего интента через нотификейшн
+    private void demoPendingIntent(){
+        EditText etNumA = (EditText)findViewById(R.id.etNumA);
+        EditText etNumB = (EditText)findViewById(R.id.etNumB);
+
+        // Намерение, которое будет выполнено по клику на уведомлении
+        Intent intentSecondActivity = new Intent(ctx, SecondActivity.class);
+
+        // Ожидающее намерение, которое будет помещено в уведомление и будет ожидать клика
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                ctx,
+                0,
+                intentSecondActivity,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+        // Создаем с помощью билдера свое уведомление
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
+        builder.setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_car)
+                .setAutoCancel(true)
+                .setContentTitle("my tytle")
+                .setContentText("My text : " + etNumA.getText())
+                .setContentInfo("my info" + etNumB.getText());
+
+        // Получаем непосрдественно класс Notification на основе нашего билдера
+        Notification notification = builder.build();
+
+        // Показываем наше уведомление через системный менеджер уведомлений
+        NotificationManager nm =
+                (NotificationManager)getSystemService(ctx.NOTIFICATION_SERVICE);
+        nm.notify(NOTIFY_ID, notification);
     }
 }
